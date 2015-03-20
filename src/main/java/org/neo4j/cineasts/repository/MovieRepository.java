@@ -24,4 +24,6 @@ public interface MovieRepository extends GraphRepository<Movie> {
                     " order by rating desc, cnt desc" +
                     " return otherMovie limit 10" )
     List<Movie> getRecommendations(String login);
+
+
 }

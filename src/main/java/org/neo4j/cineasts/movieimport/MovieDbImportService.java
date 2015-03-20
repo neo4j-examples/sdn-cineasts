@@ -1,15 +1,13 @@
 package org.neo4j.cineasts.movieimport;
 
-import org.neo4j.cineasts.domain.Actor;
-import org.neo4j.cineasts.domain.Director;
-import org.neo4j.cineasts.domain.Movie;
-import org.neo4j.cineasts.domain.Person;
-import org.neo4j.cineasts.domain.Roles;
+import org.neo4j.cineasts.domain.*;
 import org.neo4j.cineasts.repository.ActorRepository;
 import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.PersonRepository;
 import org.neo4j.helpers.collection.IteratorUtil;
+import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,8 @@ public class MovieDbImportService {
     private DirectorRepository directorRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private Session session;
 
     private MovieDbApiClient client = new MovieDbApiClient("70c7465a780b1d65c0f3d5bd394c5b80");
 
@@ -147,7 +147,7 @@ public class MovieDbImportService {
 
     private <T extends Person> T doImportPerson(String personId, T newPerson) {
         logger.debug("Importing person " + personId);
-        Person person = IteratorUtil.singleOrNull(personRepository.findByProperty("id", personId));
+        Person person = IteratorUtil.singleOrNull(findPersonByProperty("id", personId));
         if (person != null) {
             return (T) person;
         }
@@ -194,5 +194,9 @@ public class MovieDbImportService {
         Map data = client.getPerson(personId);
         localStorage.storePerson(personId, data);
         return localStorage.loadPerson(personId);
+    }
+
+    public Iterable<Person> findPersonByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Person.class, new Property(propertyName, propertyValue));
     }
 }

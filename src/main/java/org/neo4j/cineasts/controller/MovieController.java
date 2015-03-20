@@ -9,16 +9,14 @@ import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.cineasts.service.DatabasePopulator;
 import org.neo4j.helpers.collection.IteratorUtil;
+import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,20 +37,23 @@ public class MovieController {
     private UserRepository userRepository;
     @Autowired
     private DatabasePopulator populator;
+    @Autowired
+    private Session session;
+
 
 
     @RequestMapping(value = "/movies/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
     public
     @ResponseBody
     Movie getMovie(@PathVariable String id) {
-        return IteratorUtil.firstOrNull(movieRepository.findByProperty("id", id));
+        return IteratorUtil.firstOrNull(findMovieByProperty("id", id));
     }
 
 
     @RequestMapping(value = "/movies/{movieId}", method = RequestMethod.GET, headers = "Accept=text/html")
     public String singleMovieView(final Model model, @PathVariable String movieId) {
         User user = addUser(model);
-        Movie movie = IteratorUtil.firstOrNull(movieRepository.findByProperty("id", movieId));
+        Movie movie = IteratorUtil.firstOrNull(findMovieByProperty("id", movieId));
         model.addAttribute("id", movieId);
         if (movie != null) {
             model.addAttribute("movie", movie);
@@ -80,7 +81,7 @@ public class MovieController {
 
     @RequestMapping(value = "/movies/{movieId}", method = RequestMethod.POST, headers = "Accept=text/html")
     public String updateMovie(Model model, @PathVariable String movieId, @RequestParam(value = "rated", required = false) Integer stars, @RequestParam(value = "comment", required = false) String comment) {
-        Movie movie = IteratorUtil.firstOrNull(movieRepository.findByProperty("id", movieId));
+        Movie movie = IteratorUtil.firstOrNull(findMovieByProperty("id", movieId));
         User user = userRepository.getUserFromSession();
         if (user != null && movie != null) {
             int stars1 = stars == null ? -1 : stars;
@@ -113,7 +114,7 @@ public class MovieController {
 
     @RequestMapping(value = "/actors/{id}", method = RequestMethod.GET, headers = "Accept=text/html")
     public String singleActorView(Model model, @PathVariable String id) {
-        Actor actor = IteratorUtil.firstOrNull(actorRepository.findByProperty("id", id));
+        Actor actor = IteratorUtil.firstOrNull(findActorByProperty("id", id));
         model.addAttribute("actor", actor);
         model.addAttribute("id", id);
         model.addAttribute("roles", IteratorUtil.asCollection(actor.getRoles()));
@@ -141,5 +142,11 @@ public class MovieController {
         return "index";
     }
 
+    public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Movie.class, new Property(propertyName, propertyValue));
+    }
 
+    public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Actor.class, new Property(propertyName, propertyValue));
+    }
 }

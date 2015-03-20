@@ -10,6 +10,8 @@ import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.helpers.collection.IteratorUtil;
+import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.testutil.WrappingServerIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -34,6 +36,9 @@ public class DomainTest extends WrappingServerIntegrationTest{
     MovieRepository movieRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    Session session;
+    
 
     @Override
     protected int neoServerPort() {
@@ -45,7 +50,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         Actor tomHanks = new Actor("1", "Tom Hanks");
         tomHanks = actorRepository.save(tomHanks);
 
-        Actor foundTomHanks = actorRepository.findByProperty("name", tomHanks.getName()).iterator().next();
+        Actor foundTomHanks = findActorByProperty("name", tomHanks.getName()).iterator().next();
         assertEquals(tomHanks.getName(), foundTomHanks.getName());
         assertEquals(tomHanks.getId(), foundTomHanks.getId());
 
@@ -56,7 +61,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         Director robert = new Director("1", "Robert Zemeckis");
         robert = directorRepository.save(robert);
 
-        Director foundRobert = directorRepository.findByProperty("name", robert.getName()).iterator().next();
+        Director foundRobert = findDirectorByProperty("name", robert.getName()).iterator().next();
         assertEquals(robert.getId(), foundRobert.getId());
         assertEquals(robert.getName(), foundRobert.getName());
 
@@ -67,7 +72,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         Movie forrest = new Movie("1", "Forrest Gump");
         forrest = movieRepository.save(forrest);
 
-        Movie foundForrest = movieRepository.findByProperty("title", forrest.getTitle()).iterator().next();
+        Movie foundForrest = findMovieByProperty("title", forrest.getTitle()).iterator().next();
         assertEquals(forrest.getId(), foundForrest.getId());
         assertEquals(forrest.getTitle(), foundForrest.getTitle());
     }
@@ -81,12 +86,12 @@ public class DomainTest extends WrappingServerIntegrationTest{
         robert.directed(forrest);
         robert = directorRepository.save(robert);
 
-        Director foundRobert = directorRepository.findByProperty("name", robert.getName()).iterator().next();
+        Director foundRobert = findDirectorByProperty("name", robert.getName()).iterator().next();
         assertEquals(robert.getId(), foundRobert.getId());
         assertEquals(robert.getName(), foundRobert.getName());
         assertEquals(forrest, robert.getDirectedMovies().iterator().next());
 
-        Movie foundForrest = movieRepository.findByProperty("title", forrest.getTitle()).iterator().next();
+        Movie foundForrest = findMovieByProperty("title", forrest.getTitle()).iterator().next();
         assertEquals(1, foundForrest.getDirectors().size());
         assertEquals(foundRobert, foundForrest.getDirectors().iterator().next());
 
@@ -103,7 +108,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         tomHanks.playedIn(forrest, "Forrest Gump");
         tomHanks = actorRepository.save(tomHanks);
 
-        Actor foundTomHanks = actorRepository.findByProperty("name", tomHanks.getName()).iterator().next();
+        Actor foundTomHanks = findActorByProperty("name", tomHanks.getName()).iterator().next();
         assertEquals(tomHanks.getName(), foundTomHanks.getName());
         assertEquals(tomHanks.getId(), foundTomHanks.getId());
         assertEquals("Forrest Gump", foundTomHanks.getRoles().iterator().next().getName());
@@ -121,10 +126,10 @@ public class DomainTest extends WrappingServerIntegrationTest{
         micha = userRepository.save(micha);
 
 
-        User foundMicha = userRepository.findByProperty("login", "micha").iterator().next();
+        User foundMicha = findUserByProperty("login", "micha").iterator().next();
         assertEquals(1, foundMicha.getRatings().size());
 
-        Movie foundForrest = movieRepository.findByProperty("title", forrest.getTitle()).iterator().next();
+        Movie foundForrest = findMovieByProperty("title", forrest.getTitle()).iterator().next();
         assertEquals(1, foundForrest.getRatings().size());
 
         Rating rating = foundForrest.getRatings().iterator().next();
@@ -147,7 +152,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         forrest.addRating(awesome);
         movieRepository.save(forrest);
 
-        User foundMicha = userRepository.findByProperty("login", "micha").iterator().next();
+        User foundMicha = findUserByProperty("login", "micha").iterator().next();
         //TODO debug this   (the startNode/EndNode issue)
         /*
         org.neo4j.ogm.session.result.ResultProcessingException: "errors":[{"code":"Neo.DatabaseError.Statement.ExecutionFailure","message":null,"stackTrace":"java.lang.NullPointerException\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.builders.GetGraphElements$.getElements(GetGraphElements.scala:45)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.builders.GetGraphElements$.getOptionalElements(GetGraphElements.scala:28)\n\tat org.neo4j.cypher.internal.compiler.v2_1.commands.EntityProducerFactory$$anonfun$3$$anonfun$applyOrElse$4.apply(EntityProducerFactory.scala:82)\n\tat org.neo4j.cypher.internal.compiler.v2_1.commands.EntityProducerFactory$$anonfun$3$$anonfun$applyOrElse$4.apply(EntityProducerFactory.scala:80)\n\tat org.neo4j.cypher.internal.compiler.v2_1.commands.EntityProducerFactory$$anon$1.apply(EntityProducerFactory.scala:36)\n\tat org.neo4j.cypher.internal.compiler.v2_1.commands.EntityProducerFactory$$anon$1.apply(EntityProducerFactory.scala:35)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.matching.MonoDirectionalTraversalMatcher.findMatchingPaths(MonodirectionalTraversalMatcher.scala:46)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.TraversalMatchPipe$$anonfun$internalCreateResults$1.apply(TraversalMatchPipe.scala:36)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.TraversalMatchPipe$$anonfun$internalCreateResults$1.apply(TraversalMatchPipe.scala:33)\n\tat scala.collection.Iterator$$anon$13.hasNext(Iterator.scala:371)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:327)\n\tat scala.collection.Iterator$class.foreach(Iterator.scala:727)\n\tat scala.collection.AbstractIterator.foreach(Iterator.scala:1157)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.EagerAggregationPipe.internalCreateResults(EagerAggregationPipe.scala:78)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.PipeWithSource.createResults(Pipe.scala:105)\n\tat org.neo4j.cypher.internal.compiler.v2_1.pipes.PipeWithSource.createResults(Pipe.scala:102)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anonfun$getExecutionPlanFunction$1$$anonfun$apply$2.apply(ExecutionPlanBuilder.scala:120)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anonfun$getExecutionPlanFunction$1$$anonfun$apply$2.apply(ExecutionPlanBuilder.scala:119)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionWorkflowBuilder.runWithQueryState(ExecutionPlanBuilder.scala:168)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anonfun$getExecutionPlanFunction$1.apply(ExecutionPlanBuilder.scala:118)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anonfun$getExecutionPlanFunction$1.apply(ExecutionPlanBuilder.scala:103)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anon$1.execute(ExecutionPlanBuilder.scala:68)\n\tat org.neo4j.cypher.internal.compiler.v2_1.executionplan.ExecutionPlanBuilder$$anon$1.execute(ExecutionPlanBuilder.scala:67)\n\tat org.neo4j.cypher.internal.ExecutionPlanWrapperForV2_1.execute(CypherCompiler.scala:159)\n\tat org.neo4j.cypher.ExecutionEngine.execute(ExecutionEngine.scala:76)\n\tat org.neo4j.cypher.ExecutionEngine.execute(ExecutionEngine.scala:71)\n\tat org.neo4j.cypher.javacompat.ExecutionEngine.execute(ExecutionEngine.java:84)\n\tat org.neo4j.server.rest.transactional.TransactionHandle.executeStatements(TransactionHandle.java:277)\n\tat org.neo4j.server.rest.transactional.TransactionHandle.commit(TransactionHandle.java:139)\n\tat org.neo4j.server.rest.web.TransactionalService$2.write(TransactionalService.java:202)\n\tat com.sun.jersey.core.impl.provider.entity.StreamingOutputProvider.writeTo(StreamingOutputProvider.java:71)\n\tat com.sun.jersey.core.impl.provider.entity.StreamingOutputProvider.writeTo(StreamingOutputProvider.java:57)\n\tat com.sun.jersey.spi.container.ContainerResponse.write(ContainerResponse.java:306)\n\tat com.sun.jersey.server.impl.application.WebApplicationImpl._handleRequest(WebApplicationImpl.java:1437)\n\tat com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1349)\n\tat com.sun.jersey.server.impl.application.WebApplicationImpl.handleRequest(WebApplicationImpl.java:1339)\n\tat com.sun.jersey.spi.container.servlet.WebComponent.service(WebComponent.java:416)\n\tat com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:537)\n\tat com.sun.jersey.spi.container.servlet.ServletContainer.service(ServletContainer.java:699)\n\tat javax.servlet.http.HttpServlet.service(HttpServlet.java:848)\n\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:698)\n\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:505)\n\tat org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:211)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1096)\n\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:432)\n\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:175)\n\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1030)\n\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:136)\n\tat org.eclipse.jetty.server.handler.HandlerList.handle(HandlerList.java:52)\n\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n\tat org.eclipse.jetty.server.Server.handle(Server.java:445)\n\tat org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:268)\n\tat org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:229)\n\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.run(AbstractConnection.java:358)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:601)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:532)\n\tat java.lang.Thread.run(Thread.java:724)\n"}]}
@@ -155,7 +160,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
          */
         assertEquals(1, foundMicha.getRatings().size());
 
-        Movie foundForrest = movieRepository.findByProperty("id", "1").iterator().next();
+        Movie foundForrest = findMovieByProperty("id", "1").iterator().next();
         assertEquals(1, foundForrest.getRatings().size());
 
         Rating rating = foundForrest.getRatings().iterator().next();
@@ -170,7 +175,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         final User me = userRepository.register("me", "me", "me");
         final User you = userRepository.save(new User("you", "you", "you"));
         userRepository.addFriend("you", userRepository.getUserFromSession());
-        final User loaded = userRepository.findByProperty("login", "me").iterator().next();
+        final User loaded = findUserByProperty("login", "me").iterator().next();
         assertEquals(1, loaded.getFriends().size());
     }
 
@@ -179,7 +184,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         User micha = new User("micha", "Micha", "password", User.SecurityRole.ROLE_ADMIN, User.SecurityRole.ROLE_USER);
         userRepository.save(micha);
 
-        User foundMicha = userRepository.findByProperty("login","micha").iterator().next();
+        User foundMicha = findUserByProperty("login","micha").iterator().next();
         assertEquals(micha.getName(),foundMicha.getName());
     }
 
@@ -194,7 +199,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         Rating awesome = micha.rate(forrest, 5, "Awesome");
         micha = userRepository.save(micha);
 
-        Movie foundForrest = movieRepository.findByProperty("id", "1").iterator().next();
+        Movie foundForrest = findMovieByProperty("id", "1").iterator().next();
         Rating foundAwesome = userRepository.findUsersRatingForMovie(foundForrest, micha);
         //TODO Infinite recursion
         assertNotNull(foundAwesome);
@@ -214,7 +219,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         lana.directed(matrix);
         directorRepository.save(lana);
 
-        Movie foundMatrix = movieRepository.findByProperty("id", "3").iterator().next();
+        Movie foundMatrix = findMovieByProperty("id", "3").iterator().next();
         assertEquals(2, foundMatrix.getDirectors().size());
     }
 
@@ -239,10 +244,10 @@ public class DomainTest extends WrappingServerIntegrationTest{
         carrie.playedIn(matrix, "Trinity");
         matrix = movieRepository.save(matrix);
 
-        Actor foundKeanu = actorRepository.findByProperty("id","6384").iterator().next();
+        Actor foundKeanu = findActorByProperty("id","6384").iterator().next();
         assertEquals(1,foundKeanu.getRoles().size());
 
-        Movie foundMatrix = movieRepository.findByProperty("id", "3").iterator().next();
+        Movie foundMatrix = findMovieByProperty("id", "3").iterator().next();
         assertEquals(3, foundMatrix.getRoles().size());
 
     }
@@ -264,7 +269,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
         unforgiven.addDirector(clintDirector);
         movieRepository.save(unforgiven);
 
-        Movie foundUnforgiven = movieRepository.findByProperty("id","4").iterator().next();
+        Movie foundUnforgiven = findMovieByProperty("id","4").iterator().next();
         assertEquals(1,foundUnforgiven.getDirectors().size());
         assertEquals(1,foundUnforgiven.getRoles().size());
         assertEquals("5",foundUnforgiven.getDirectors().iterator().next().getId());
@@ -272,9 +277,9 @@ public class DomainTest extends WrappingServerIntegrationTest{
 
         Person p = personRepository.findByProperty("id","5").iterator().next();
         assertNotNull(p);
-        Actor actor =  actorRepository.findByProperty("id","5").iterator().next();
+        Actor actor =  findActorByProperty("id","5").iterator().next();
         assertNotNull(actor);
-        Director d = directorRepository.findByProperty("id","5").iterator().next();
+        Director d = findDirectorByProperty("id","5").iterator().next();
         assertNotNull(d);*/
 
     }
@@ -303,21 +308,21 @@ public class DomainTest extends WrappingServerIntegrationTest{
         micha = userRepository.save(micha);
 
 
-        User foundMicha = userRepository.findByProperty("login", "micha").iterator().next();
+        User foundMicha = findUserByProperty("login", "micha").iterator().next();
         assertEquals(1, foundMicha.getRatings().size());
 
-        Movie foundForrest = movieRepository.findByProperty("title", forrest.getTitle()).iterator().next();
+        Movie foundForrest = findMovieByProperty("title", forrest.getTitle()).iterator().next();
         assertEquals(1, foundForrest.getRatings().size());
 
         Rating okay = luanne.rate(forrest,3,"Okay");
         luanne = userRepository.save(luanne);
 
-        User foundLuanne = userRepository.findByProperty("login", "luanne").iterator().next();
+        User foundLuanne = findUserByProperty("login", "luanne").iterator().next();
         assertEquals(1, foundLuanne.getRatings().size());
-        foundMicha = userRepository.findByProperty("login", "micha").iterator().next();
+        foundMicha = findUserByProperty("login", "micha").iterator().next();
         assertEquals(1, foundMicha.getRatings().size());
 
-        foundForrest = movieRepository.findByProperty("title", forrest.getTitle()).iterator().next();
+        foundForrest = findMovieByProperty("title", forrest.getTitle()).iterator().next();
         assertEquals(2, foundForrest.getRatings().size());
 
       /*  Rating rating = foundForrest.getRatings().iterator().next();
@@ -336,9 +341,27 @@ public class DomainTest extends WrappingServerIntegrationTest{
                         "(bw:Person:Actor {name: 'Bruce Willis'}), " +
                         "(bw)-[:ACTS_IN {name:'Bruce'}]->(dh)");
 
-        Movie dieHard = IteratorUtil.firstOrNull(movieRepository.findByProperty("title","Die Hard"));
+        Movie dieHard = IteratorUtil.firstOrNull(findMovieByProperty("title","Die Hard"));
         assertNotNull(dieHard);
         assertEquals(1,dieHard.getRoles().size());
     }
 
+    public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Actor.class, new Property(propertyName, propertyValue));
+    }
+
+    public Iterable<Director> findDirectorByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Director.class, new Property(propertyName, propertyValue));
+    }
+    public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Movie.class, new Property(propertyName, propertyValue));
+    }
+
+    public Iterable<Person> findPersonByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(Person.class, new Property(propertyName, propertyValue));
+    }
+
+    public Iterable<User> findUserByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(User.class, new Property(propertyName, propertyValue));
+    }
 }

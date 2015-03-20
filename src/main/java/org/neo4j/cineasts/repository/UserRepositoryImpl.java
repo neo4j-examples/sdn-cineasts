@@ -3,6 +3,8 @@ package org.neo4j.cineasts.repository;
 import org.neo4j.cineasts.domain.User;
 import org.neo4j.cineasts.service.CineastsUserDetails;
 import org.neo4j.helpers.collection.IteratorUtil;
+import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,9 @@ public class
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private Session session;
+
     @Override
     public CineastsUserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         final User user = findByLogin(login);
@@ -31,7 +36,7 @@ public class
     }
 
     private User findByLogin(String login) {
-        return IteratorUtil.firstOrNull(userRepository.findByProperty("login", login).iterator());
+        return IteratorUtil.firstOrNull(findByProperty("login", login).iterator());
     }
 
     @Override
@@ -82,5 +87,8 @@ public class
         }
     }
 
+    public Iterable<User> findByProperty(String propertyName, Object propertyValue) {
+        return session.loadByProperty(User.class, new Property(propertyName, propertyValue));
+    }
 
 }
