@@ -44,7 +44,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/{login}")
     public String publicProfile(Model model, @PathVariable("login") String login) {
-        User profiled =userRepository.findByLogin(login);
+        User profiled =userRepository.loadUserByUsername(login).getUser();
         User user = userRepository.getUserFromSession();
 
         return publicProfile(model, profiled, user);
