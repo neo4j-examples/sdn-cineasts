@@ -16,7 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * @author mh
@@ -58,7 +58,7 @@ public class MovieDbImportServiceTest extends WrappingServerIntegrationTest {
     @Test
     public void testImportMovieTwice() throws Exception {
         Movie movie = importService.importMovie("603");
-        Movie movie2 = importService.importMovie("603");
+        importService.importMovie("603");
         final Movie foundMovie = movieRepository.findById("603");
         assertEquals("movie-id", movie, foundMovie);
     }
@@ -73,8 +73,8 @@ public class MovieDbImportServiceTest extends WrappingServerIntegrationTest {
     @Test
     @Ignore
     public void shouldImportMovieWithTwoDirectors() throws Exception {
-        Movie movie = importService.importMovie("603");
-        movie = findMovieByProperty("id", "603").iterator().next();
+        importService.importMovie("603");
+        Movie movie = findMovieByProperty("id", "603").iterator().next();
         assertEquals(2, movie.getDirectors().size());
     }
 

@@ -138,18 +138,13 @@ public class User {
         if (login != null ? !login.equals(user.login) : user.login != null) {
             return false;
         }
-        if (nodeId != null ? !nodeId.equals(user.nodeId) : user.nodeId != null) {
-            return false;
-        }
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = nodeId != null ? nodeId.hashCode() : 0;
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        return result;
+        return login != null ? login.hashCode() : 0;
     }
 
     public enum SecurityRole implements GrantedAuthority {

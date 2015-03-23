@@ -10,7 +10,6 @@ import org.neo4j.cineasts.domain.Movie;
 import org.neo4j.cineasts.repository.ActorRepository;
 import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
-import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.cineasts.service.Neo4jDatabaseCleaner;
 import org.neo4j.ogm.testutil.WrappingServerIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class DatabasePopulationTest extends WrappingServerIntegrationTest {
     MovieRepository movieRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     Neo4jDatabaseCleaner cleaner;
 
     @Override
@@ -47,14 +43,14 @@ public class DatabasePopulationTest extends WrappingServerIntegrationTest {
     public void databaseShouldBeCleared() {
 
         Actor tomHanks = new Actor("1", "Tom Hanks");
-        tomHanks = actorRepository.save(tomHanks);
+        actorRepository.save(tomHanks);
 
         Movie forrest = new Movie("1", "Forrest Gump");
         forrest = movieRepository.save(forrest);
 
         Director robert = new Director("1", "Robert Zemeckis");
         robert.directed(forrest);
-        robert = directorRepository.save(robert);
+        directorRepository.save(robert);
 
         cleaner.cleanDb();
 

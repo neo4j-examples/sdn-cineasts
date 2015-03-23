@@ -117,14 +117,12 @@ public class DomainTest extends WrappingServerIntegrationTest{
     @Test
     public void userCanRateMovie() {
         Movie forrest = new Movie("1", "Forrest Gump");
-        //forrest =  movieRepository.save(forrest);
 
         User micha = new User("micha", "Micha", "password");
         micha = userRepository.save(micha);
 
         Rating awesome = micha.rate(forrest, 5, "Awesome");
-        micha = userRepository.save(micha);
-
+        userRepository.save(micha);
 
         User foundMicha = findUserByProperty("login", "micha").iterator().next();
         assertEquals(1, foundMicha.getRatings().size());
@@ -149,6 +147,7 @@ public class DomainTest extends WrappingServerIntegrationTest{
 
         Rating awesome = new Rating(micha, forrest, 5, "Awesome");
 
+        micha.getRatings().add(awesome);
         forrest.addRating(awesome);
         movieRepository.save(forrest);
 
@@ -333,7 +332,6 @@ public class DomainTest extends WrappingServerIntegrationTest{
     }
 
     @Test
-    @Ignore
     public void shouldLoadActorsForAPersistedMovie() {
         new ExecutionEngine(getDatabase()).execute(
                 "CREATE " +

@@ -155,7 +155,7 @@ public class MovieDbImportService {
         if (data.containsKey("not_found")) {
             throw new RuntimeException("Data for Person " + personId + " not found.");
         }
-        movieDbJsonMapper.mapToPerson(data, newPerson);
+        movieDbJsonMapper.mapToPerson(data, newPerson,baseImageUrl);
         return personRepository.save(newPerson);
     }
 

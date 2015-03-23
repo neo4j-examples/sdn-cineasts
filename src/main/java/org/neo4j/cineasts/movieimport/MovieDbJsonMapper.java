@@ -33,20 +33,6 @@ public class MovieDbJsonMapper {
         }
     }
 
-    private String selectImageUrl(List<Map> data, final String type, final String size) {
-        if (data == null) {
-            return null;
-        }
-        for (Map entry : data) {
-            Map image = (Map) entry.get("image");
-            if (image.get("type").equals(type) && image.get("size").equals(size)) {
-                return (String) image.get("url");
-            }
-        }
-        return null;
-    }
-
-
     private String extractFirst(Map data, String field, String property) {
         List<Map> inner = (List<Map>) data.get(field);
         if (inner == null || inner.isEmpty()) {
@@ -68,7 +54,7 @@ public class MovieDbJsonMapper {
     }
 
 
-    public void mapToPerson(Map data, Person person) {
+    public void mapToPerson(Map data, Person person, String baseImageUrl) {
         try {
             person.setName((String) data.get("name"));
             person.setBirthday(toDate(data, "birthday", "yyyy-MM-dd"));
@@ -76,8 +62,9 @@ public class MovieDbJsonMapper {
             String biography = (String) data.get("biography");
             person.setBiography(limit(biography, 500));
             person.setVersion((Integer) data.get("version"));
-            person.setProfileImageUrl(selectImageUrl((List<Map>) data.get("profile"), "profile", "profile"));
-            person.setLastModified(toDate(data, "last_modified_at", "yyyy-MM-dd HH:mm:ss"));
+            if(data.get("profile_path")!=null) {
+                person.setProfileImageUrl(baseImageUrl + (String) data.get("profile_path"));
+            }
         } catch (Exception e) {
             throw new MovieDbException("Failed to map json for person", e);
         }

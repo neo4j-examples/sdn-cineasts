@@ -21,7 +21,6 @@ public class Person {
     private String birthplace;
     private String biography;
     private Integer version;
-    private Date lastModified;
     private String profileImageUrl;
 
     public Person(String id, String name) {
@@ -83,14 +82,6 @@ public class Person {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
     }
 
     public String getProfileImageUrl() {

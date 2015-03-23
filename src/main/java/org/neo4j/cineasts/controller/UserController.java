@@ -4,7 +4,6 @@ package org.neo4j.cineasts.controller;
 import org.neo4j.cineasts.domain.User;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
-import org.neo4j.cineasts.repository.UserRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class UserController {
 
     @RequestMapping(value = "/user/{login}")
     public String publicProfile(Model model, @PathVariable("login") String login) {
-        User profiled = ((UserRepositoryImpl) userRepository).findByProperty("login",login).iterator().next();
+        User profiled =userRepository.findByLogin(login);
         User user = userRepository.getUserFromSession();
 
         return publicProfile(model, profiled, user);
