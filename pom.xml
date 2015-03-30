@@ -14,8 +14,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.1.4.RELEASE</spring.version>
         <spring.security.version>4.0.0.RC1</spring.security.version>
-        <neo4j.version>2.1.7</neo4j.version>
-        <sdn.version>4.0.0.M1</sdn.version>
+        <neo4j.version>2.2.0</neo4j.version>
+        <sdn.version>4.0.0.BUILD-SNAPSHOT</sdn.version>
     </properties>
 
     <dependencies>
@@ -90,6 +90,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-kernel</artifactId>
@@ -97,28 +98,41 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j.app</groupId>
             <artifactId>neo4j-server</artifactId>
             <version>${neo4j.version}</version>
             <type>test-jar</type>
         </dependency>
+
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-test</artifactId>
-            <version>1.0.0.BUILD-SNAPSHOT</version>
+            <artifactId>neo4j-io</artifactId>
+            <version>${neo4j.version}</version>
+            <type>test-jar</type>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <version>1.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j</artifactId>
+            <version>${sdn.version}</version>
+            <type>test-jar</type>
+        </dependency>
+
 
         <!-- Others -->
         <dependency>
@@ -167,6 +181,16 @@
                     <stopKey>foo</stopKey>
                     <stopPort>9999</stopPort>
                     <jvmArgs></jvmArgs>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>username</name>
+                            <value>neo4j</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>password</name>
+                            <value>neo</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
         </plugins>

@@ -2,8 +2,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--@elvariable id="user" type="org.neo4j.cineasts.domain.User"--%>
-<%--@elvariable id="recommendations" type="java.util.List<org.neo4j.cineasts.domain.MovieRecommendation>"--%>
-<%--@elvariable id="recommendation" type="org.neo4j.cineasts.domain.MovieRecommendation"--%>
+<%--@elvariable id="recommendations" type="java.util.List<org.neo4j.cineasts.domain.Movie>"--%>
+<%--@elvariable id="recommendation" type="org.neo4j.cineasts.domain.Movie"--%>
 <html>
   <head>
     <title>Profile</title>
@@ -81,8 +81,8 @@
               <c:choose>
                   <c:when test="${not empty recommendations}">
                       <c:forEach items="${recommendations}" var="recommendation">
-                          <c:set var="movie" value="${recommendation.movie}"/>
-                          <c:set var="stars" value="${recommendation.rating}"/>
+                          <c:set var="movie" value="${recommendation}"/>
+                          <c:set var="stars" value="${recommendation.stars}"/>
                           <li>
                               <h4><a href="<c:url value="/movies/${movie.id}" />"><c:out value="${movie.title}"/>
                                   (${movie.year}) - &quot;${movie.tagline}&quot;</a>

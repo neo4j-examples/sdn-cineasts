@@ -11,7 +11,6 @@ import org.neo4j.cineasts.repository.ActorRepository;
 import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.service.Neo4jDatabaseCleaner;
-import org.neo4j.ogm.testutil.WrappingServerIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {PersistenceContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class DatabasePopulationTest extends WrappingServerIntegrationTest {
+public class DatabasePopulationTest {
 
     @Autowired
     ActorRepository actorRepository;
@@ -33,11 +32,6 @@ public class DatabasePopulationTest extends WrappingServerIntegrationTest {
 
     @Autowired
     Neo4jDatabaseCleaner cleaner;
-
-    @Override
-    protected int neoServerPort() {
-        return PersistenceContext.NEO4J_PORT;
-    }
 
     @Test
     public void databaseShouldBeCleared() {

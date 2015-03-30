@@ -20,6 +20,7 @@ public interface MovieRepository extends GraphRepository<Movie> {
 
     @Query( "match (user:User {login: {0}})-[r:RATED]->(movie)<-[r2:RATED]-(other)-[r3:RATED]->(otherMovie) " +
                     " where r.stars >= 3 and r2.stars >= r.stars and r3.stars >= r.stars " +
+                    " and not((user)-[:RATED]->(otherMovie)) " +
                     " with otherMovie, avg(r3.stars) as rating, count(*) as cnt" +
                     " order by rating desc, cnt desc" +
                     " return otherMovie limit 10" )

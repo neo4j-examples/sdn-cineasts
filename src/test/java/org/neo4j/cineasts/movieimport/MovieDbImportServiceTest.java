@@ -10,7 +10,6 @@ import org.neo4j.cineasts.domain.Person;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.ogm.model.Property;
 import org.neo4j.ogm.session.Session;
-import org.neo4j.ogm.testutil.WrappingServerIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -25,7 +24,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {PersistenceContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class MovieDbImportServiceTest extends WrappingServerIntegrationTest {
+public class MovieDbImportServiceTest {
 
     @Autowired
     MovieDbImportService importService;
@@ -34,11 +33,6 @@ public class MovieDbImportServiceTest extends WrappingServerIntegrationTest {
 
     @Autowired
     Session session;
-
-    @Override
-    protected int neoServerPort() {
-        return PersistenceContext.NEO4J_PORT;
-    }
 
     @Test
     public void testImportMovie() throws Exception {
@@ -71,7 +65,6 @@ public class MovieDbImportServiceTest extends WrappingServerIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void shouldImportMovieWithTwoDirectors() throws Exception {
         importService.importMovie("603");
         Movie movie = findMovieByProperty("id", "603").iterator().next();

@@ -58,7 +58,7 @@ public class MovieDbJsonMapper {
         try {
             person.setName((String) data.get("name"));
             person.setBirthday(toDate(data, "birthday", "yyyy-MM-dd"));
-            person.setBirthplace((String) data.get("birthplace"));
+            person.setBirthplace((String) data.get("place_of_birth"));
             String biography = (String) data.get("biography");
             person.setBiography(limit(biography, 500));
             person.setVersion((Integer) data.get("version"));

@@ -1,6 +1,10 @@
 package org.neo4j.cineasts.movieimport;
 
-import org.neo4j.cineasts.domain.*;
+import org.neo4j.cineasts.domain.Actor;
+import org.neo4j.cineasts.domain.Director;
+import org.neo4j.cineasts.domain.Movie;
+import org.neo4j.cineasts.domain.Person;
+import org.neo4j.cineasts.domain.Roles;
 import org.neo4j.cineasts.repository.ActorRepository;
 import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
@@ -118,6 +122,7 @@ public class MovieDbImportService {
                     final Director director = doImportPerson(id, new Director(id));
                     director.directed(movie);
                     directorRepository.save(director);
+                    movieRepository.save(movie);
                 }
                 catch (ClassCastException cce) {  //TODO hack for now
                     logger.debug("Person " + id + " and job " + jobName + " already exists as an actor");

@@ -26,7 +26,7 @@ public class Movie {
     String description;
 
     @Relationship(type = "DIRECTED", direction = Relationship.INCOMING)
-    Set<Person> directors = new HashSet<>();
+    Set<Director> directors = new HashSet<>();
 
     @Relationship(type = "ACTS_IN", direction = Relationship.INCOMING)
     Set<Role> roles = new HashSet<>();
@@ -206,11 +206,11 @@ public class Movie {
         return numberOfParts > 0 ? parts[numberOfParts - 1] : null;
     }
 
-    public Set<Person> getDirectors() {
+    public Set<Director> getDirectors() {
         return directors;
     }
 
-    public void addDirector(Person director) {
+    public void addDirector(Director director) {
         directors.add(director);
     }
 
