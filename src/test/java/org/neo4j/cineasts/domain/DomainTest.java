@@ -1,5 +1,10 @@
 package org.neo4j.cineasts.domain;
 
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,10 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @ContextConfiguration(classes = {PersistenceContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -173,7 +174,6 @@ public class DomainTest {
     }
 
     @Test
-    @Ignore
     public void ratingForAMovieByAUserCanBeRetrieved() {
         Movie forrest = new Movie("1", "Forrest Gump");
 
@@ -184,8 +184,7 @@ public class DomainTest {
         micha = userRepository.save(micha);
 
         Movie foundForrest = findMovieByProperty("id", "1").iterator().next();
-        Rating foundAwesome = userRepository.findUsersRatingForMovie(foundForrest, micha);
-        //TODO Infinite recursion
+        Rating foundAwesome = userRepository.findUsersRatingForMovie(foundForrest.nodeId, micha.nodeId);
         assertNotNull(foundAwesome);
         assertEquals(foundAwesome, awesome);
     }
@@ -224,7 +223,7 @@ public class DomainTest {
         actorRepository.save(carrie);
 
         Actor foundKeanu = findActorByProperty("id","6384").iterator().next();
-        assertEquals(1,foundKeanu.getRoles().size());
+        assertEquals(1, foundKeanu.getRoles().size());
 
         Movie foundMatrix = findMovieByProperty("id", "3").iterator().next();
         assertEquals(3, foundMatrix.getRoles().size());
@@ -321,6 +320,40 @@ public class DomainTest {
         Movie dieHard = IteratorUtil.firstOrNull(findMovieByProperty("title","Die Hard"));
         assertNotNull(dieHard);
         assertEquals(1,dieHard.getRoles().size());
+    }
+
+    @Test
+    public void shouldFindMoviesByTitle() {
+        Movie die = new Movie("600","Die Hard");
+        Movie matrix = new Movie("601","The Matrix");
+        Movie matrixReloaded= new Movie("602","The Matrix Reloaded");
+        Movie returnKing= new Movie("603","LOTR The Return of the King");
+        session.save(die);
+        session.save(matrix);
+        session.save(matrixReloaded);
+        session.save(returnKing);
+
+        Iterable<Movie> mat = movieRepository.findByTitleLike("(?i).*mat.*");
+        List<String> movieIds = new ArrayList<>();
+        for(Movie movie : mat) {
+            movieIds.add(movie.getId());
+        }
+        assertEquals(2, movieIds.size());
+        assertTrue(movieIds.contains("601"));
+        assertTrue(movieIds.contains("602"));
+
+        Movie foundDie = movieRepository.findByTitleLike("(?i).*Die Hard.*").iterator().next();
+        assertNotNull(foundDie);
+        assertEquals("600", foundDie.getId());
+
+        Iterable<Movie> re = movieRepository.findByTitleLike("(?i).*re.*");
+        movieIds = new ArrayList<>();
+        for(Movie movie : re) {
+            movieIds.add(movie.getId());
+        }
+        assertEquals(2,movieIds.size());
+        assertTrue(movieIds.contains("602"));
+        assertTrue(movieIds.contains("603"));
     }
 
     public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {

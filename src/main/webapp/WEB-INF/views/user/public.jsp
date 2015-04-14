@@ -44,6 +44,7 @@
         </c:when>
         <c:otherwise>
 		  <form id="add_friend" action="/user/${profiled.login}/friends" method="post">
+		    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
           	<a href="#" onClick="document.getElementById('add_friend').submit();return false;">Add ${name} as a friend.</a>
 		  </form>
         </c:otherwise>

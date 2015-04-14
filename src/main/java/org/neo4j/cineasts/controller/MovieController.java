@@ -1,5 +1,8 @@
 package org.neo4j.cineasts.controller;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.neo4j.cineasts.domain.Actor;
 import org.neo4j.cineasts.domain.Movie;
 import org.neo4j.cineasts.domain.Rating;
@@ -17,9 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @author mh
@@ -102,7 +102,7 @@ public class MovieController {
     public String findMovies(Model model, @RequestParam("q") String query) {
         if (query != null && !query.isEmpty()) {
             //Page<Movie> movies = movieRepository.findByTitleLike(query, new PageRequest(0, 20));
-            Iterable<Movie> movies = movieRepository.findByTitleLike(query);
+            Iterable<Movie> movies = movieRepository.findByTitleLike("(?i).*" + query + ".*");
             model.addAttribute("movies", IteratorUtil.asCollection(movies));
         } else {
             model.addAttribute("movies", Collections.emptyList());
