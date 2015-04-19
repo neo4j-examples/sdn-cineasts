@@ -92,11 +92,8 @@ public class DomainTest {
     @Test
     public void shouldAllowActorToActInMovie() {
         Movie forrest = new Movie("1", "Forrest Gump");
-        forrest = movieRepository.save(forrest);
 
         Actor tomHanks = new Actor("1", "Tom Hanks");
-        tomHanks = actorRepository.save(tomHanks);
-
         tomHanks.playedIn(forrest, "Forrest Gump");
         tomHanks = actorRepository.save(tomHanks);
 
@@ -267,7 +264,7 @@ public class DomainTest {
         User micha = new User("micha", "Micha", "password", User.SecurityRole.ROLE_ADMIN, User.SecurityRole.ROLE_USER);
         userRepository.save(micha);
 
-        List<Movie> recs = movieRepository.getRecommendations("micha");
+        List<MovieRecommendation> recs = movieRepository.getRecommendations("micha");
         assertEquals(0,recs.size());
     }
 

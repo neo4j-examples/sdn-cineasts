@@ -81,11 +81,11 @@
               <c:choose>
                   <c:when test="${not empty recommendations}">
                       <c:forEach items="${recommendations}" var="recommendation">
-                          <c:set var="movie" value="${recommendation}"/>
-                          <c:set var="stars" value="${recommendation.stars}"/>
+                          <c:set var="movie" value="${recommendation.movie}"/>
+                          <c:set var="stars" value="${recommendation.rating}"/>
                           <li>
-                              <h4><a href="<c:url value="/movies/${movie.id}" />"><c:out value="${movie.title}"/>
-                                  (${movie.year}) - &quot;${movie.tagline}&quot;</a>
+                              <h4><a href="<c:url value="/movies/${recommendation.movieId}" />"><c:out value="${recommendation.title}"/>
+                                  (${recommendation.movie.year}) - &quot;${recommendation.tagline}&quot;</a>
                               <img class="rating" src="/images/rated_${stars}.png" alt="${stars} stars"/>
                               </h4>
                           </li>
