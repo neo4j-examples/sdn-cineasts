@@ -12,7 +12,7 @@ import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.cineasts.service.DatabasePopulator;
 import org.neo4j.helpers.collection.IteratorUtil;
-import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,10 +143,10 @@ public class MovieController {
     }
 
     public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Movie.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Movie.class, new Filter(propertyName, propertyValue));
     }
 
     public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Actor.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Actor.class, new Filter(propertyName, propertyValue));
     }
 }

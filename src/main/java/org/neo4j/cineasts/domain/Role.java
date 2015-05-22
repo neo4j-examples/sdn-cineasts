@@ -54,24 +54,21 @@ public class Role {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Role)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Role role = (Role) o;
 
-        if (name != null ? !name.equals(role.name) : role.name != null) {
-            return false;
-        }
-
-        return true;
+        if (movie != null ? !movie.equals(role.movie) : role.movie != null) return false;
+        if (actor != null ? !actor.equals(role.actor) : role.actor != null) return false;
+        return !(name != null ? !name.equals(role.name) : role.name != null);
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        int result = movie != null ? movie.hashCode() : 0;
+        result = 31 * result + (actor != null ? actor.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

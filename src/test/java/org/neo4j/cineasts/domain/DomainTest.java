@@ -14,7 +14,7 @@ import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.helpers.collection.IteratorUtil;
-import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
@@ -354,21 +354,21 @@ public class DomainTest {
     }
 
     public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Actor.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Actor.class, new Filter(propertyName, propertyValue));
     }
 
     public Iterable<Director> findDirectorByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Director.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Director.class, new Filter(propertyName, propertyValue));
     }
     public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Movie.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Movie.class, new Filter(propertyName, propertyValue));
     }
 
     public Iterable<Person> findPersonByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(Person.class, new Property(propertyName, propertyValue));
+        return session.loadAll(Person.class, new Filter(propertyName, propertyValue));
     }
 
     public Iterable<User> findUserByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(User.class, new Property(propertyName, propertyValue));
+        return session.loadAll(User.class, new Filter(propertyName, propertyValue));
     }
 }

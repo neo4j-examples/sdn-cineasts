@@ -3,7 +3,7 @@ package org.neo4j.cineasts.repository;
 import org.neo4j.cineasts.domain.User;
 import org.neo4j.cineasts.service.CineastsUserDetails;
 import org.neo4j.helpers.collection.IteratorUtil;
-import org.neo4j.ogm.model.Property;
+import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -88,7 +88,7 @@ public class
     }
 
     public Iterable<User> findByProperty(String propertyName, Object propertyValue) {
-        return session.loadByProperty(User.class, new Property(propertyName, propertyValue));
+        return session.loadAll(User.class, new Filter(propertyName, propertyValue));
     }
 
 }
