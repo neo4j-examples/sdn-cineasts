@@ -13,6 +13,6 @@ for new friends and movies.
 The tutorial is presented as a colloquial description of the steps necessary to create the application.
 It provides the configuration and code examples that are needed to understand what's happening.
 
-The complete tutorial is contained in this projects [github wiki](https://github.com/jexp/cineasts/wiki).
+The complete tutorial is contained in this projects [github wiki](https://github.com/neo4j-examples/sdn4-cineasts/wiki).
 
 To run it, start your local Neo4j server on localhost:7474 and run `mvn install jetty:run`
