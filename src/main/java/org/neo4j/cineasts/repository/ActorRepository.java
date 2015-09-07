@@ -10,5 +10,5 @@ import org.springframework.data.neo4j.repository.GraphRepository;
 
 public interface ActorRepository extends GraphRepository<Actor> {
 
-    Actor findById(String id);   //TODO
+    Actor findById(String id);
 }

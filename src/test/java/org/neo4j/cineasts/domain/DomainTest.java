@@ -229,7 +229,7 @@ public class DomainTest {
 
     @Test
     @Ignore
-    public void personShouldBeAbleToBothActInAndDirectMovies() {   //TODO M>1
+    public void personShouldBeAbleToBothActInAndDirectMovies() {
        /* Movie unforgiven = new Movie("4","Unforgiven");
         unforgiven = movieRepository.save(unforgiven);
 

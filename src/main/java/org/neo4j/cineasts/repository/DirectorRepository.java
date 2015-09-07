@@ -8,5 +8,5 @@ import org.springframework.data.neo4j.repository.GraphRepository;
  * @since 02.04.11
  */
 public interface DirectorRepository extends GraphRepository<Director> {
-    Director findById(String id); //TODO unsupported in m1?
+    Director findById(String id);
 }

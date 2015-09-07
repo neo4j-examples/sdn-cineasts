@@ -9,20 +9,11 @@ import org.springframework.data.neo4j.annotation.QueryResult;
 @QueryResult
 public class MovieRecommendation {
 
-    Movie movie;
     String movieId;
     String title;
     String tagline;
 
     int rating;
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
-    }
 
     public int getRating() {
         return rating;

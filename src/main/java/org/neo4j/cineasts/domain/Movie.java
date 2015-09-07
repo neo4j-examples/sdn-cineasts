@@ -1,15 +1,11 @@
 package org.neo4j.cineasts.domain;
 
 
+import java.util.*;
+
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 
 /**
@@ -53,6 +49,7 @@ public class Movie {
         this.title = title;
     }
 
+    @Relationship(type = "ACTS_IN", direction = Relationship.INCOMING)
     public Collection<Role> getRoles() {
         return roles;
     }
@@ -104,10 +101,12 @@ public class Movie {
         return count == 0 ? 0 : stars / count;
     }
 
+    @Relationship(type = "RATED", direction = Relationship.INCOMING)
     public Set<Rating> getRatings() {
         return ratings;
     }
 
+    @Relationship(type = "RATED", direction = Relationship.INCOMING)
     public void setRatings(Set<Rating> ratings) {
         this.ratings = ratings;
     }
@@ -206,6 +205,7 @@ public class Movie {
         return numberOfParts > 0 ? parts[numberOfParts - 1] : null;
     }
 
+    @Relationship(type = "DIRECTED", direction = Relationship.INCOMING)
     public Set<Director> getDirectors() {
         return directors;
     }
