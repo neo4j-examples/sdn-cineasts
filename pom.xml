@@ -14,8 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.1.4.RELEASE</spring.version>
         <spring.security.version>4.0.0.RELEASE</spring.security.version>
-        <neo4j.version>2.2.2</neo4j.version>
-        <sdn.version>4.0.0.BUILD-SNAPSHOT</sdn.version>
+        <neo4j.version>2.2.5</neo4j.version>
+        <sdn.version>4.0.0.RELEASE</sdn.version>
+        <neo4j.ogm.version>1.1.2</neo4j.ogm.version>
     </properties>
 
     <dependencies>
@@ -96,7 +97,6 @@
             <artifactId>neo4j-kernel</artifactId>
             <version>${neo4j.version}</version>
             <type>test-jar</type>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -108,9 +108,17 @@
 
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-io</artifactId>
-            <version>${neo4j.version}</version>
+            <artifactId>neo4j-ogm</artifactId>
+            <version>${neo4j.ogm.version}</version>
             <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j.test</groupId>
+            <artifactId>neo4j-harness</artifactId>
+            <version>${neo4j.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
