@@ -15,6 +15,6 @@ public class Neo4jDatabaseCleaner {
     Session session;
 
     public void cleanDb() {
-        session.execute("MATCH n OPTIONAL MATCH n-[r]-m delete n,r,m");
+        session.purgeDatabase();
     }
 }
