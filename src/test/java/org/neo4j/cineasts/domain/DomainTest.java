@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +49,12 @@ public class DomainTest {
     UserRepository userRepository;
     @Autowired
     Session session;
-    
+
+    @After
+    public void tearDown() {
+       session.purgeDatabase();
+    }
+
     @Test
     public void shouldAllowActorCreation() {
         Actor tomHanks = new Actor("1", "Tom Hanks");
