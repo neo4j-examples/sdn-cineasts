@@ -14,9 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.1.4.RELEASE</spring.version>
         <spring.security.version>4.0.0.RELEASE</spring.security.version>
-        <neo4j.version>2.2.5</neo4j.version>
+        <neo4j.version>2.3.1</neo4j.version>
         <sdn.version>4.0.0.RELEASE</sdn.version>
-        <neo4j.ogm.version>1.1.2</neo4j.ogm.version>
+        <neo4j.ogm.version>1.1.4</neo4j.ogm.version>
     </properties>
 
     <dependencies>
@@ -63,6 +63,12 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
             <version>${sdn.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm</artifactId>
+            <version>${neo4j.ogm.version}</version>
         </dependency>
 
         <dependency>

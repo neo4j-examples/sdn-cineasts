@@ -10,9 +10,9 @@
  */
 package org.neo4j.cineasts.domain;
 
-
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 
@@ -21,6 +21,11 @@ import org.neo4j.ogm.annotation.NodeEntity;
  * @since 12.03.11
  */
 @NodeEntity
+// Example nested annotations. Requires OGM 1.1.3 or later to be explicitly declared in the POM.
+@JsonSubTypes({
+                @JsonSubTypes.Type(value = Actor.class, name = "actor"),
+                @JsonSubTypes.Type(value = Director.class, name = "director")
+})
 public class Person {
 
     @GraphId
