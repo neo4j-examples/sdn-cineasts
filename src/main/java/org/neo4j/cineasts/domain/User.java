@@ -23,9 +23,6 @@ import org.neo4j.ogm.annotation.typeconversion.Convert;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @NodeEntity
 public class User {
     public static final String FRIEND = "FRIEND";

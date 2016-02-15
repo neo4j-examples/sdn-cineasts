@@ -2,7 +2,7 @@
 Cineasts.net
 ============
 
-This project is the demo/tutorial application for the [Spring Data Neo4j 4.1](https://github.com/SpringSource/spring-data-neo4j) library which provides convenient access to the [Neo4j](http://neo4j.org) graph database.
+This project is the demo/tutorial application for the [Spring Data Neo4j 4.1](http://docs.spring.io/spring-data/data-neo4j/docs/4.1.0.M1/reference/html/) library which provides convenient access to the [Neo4j](http://neo4j.org) graph database.
 
 This tutorial creates a complete web application built on top of Spring Data Neo4j 4.1.
 
