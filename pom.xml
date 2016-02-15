@@ -16,8 +16,8 @@
         <spring.commons.version>1.12.0.BUILD-SNAPSHOT</spring.commons.version>
         <spring.security.version>4.0.3.RELEASE</spring.security.version>
         <neo4j.version>2.3.2</neo4j.version>
-        <sdn.version>4.1.0.BUILD-SNAPSHOT</sdn.version>
-        <neo4j.ogm.version>2.0.0-SNAPSHOT</neo4j.ogm.version>
+        <sdn.version>4.1.0.M1</sdn.version>
+        <neo4j.ogm.version>2.0.0-M02</neo4j.ogm.version>
     </properties>
 
     <dependencies>
@@ -124,9 +124,8 @@
 
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm</artifactId>
+            <artifactId>neo4j-ogm-test</artifactId>
             <version>${neo4j.ogm.version}</version>
-            <type>test-jar</type>
             <scope>test</scope>
         </dependency>
 
