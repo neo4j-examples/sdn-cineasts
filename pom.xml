@@ -12,12 +12,12 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.2.4.RELEASE</spring.version>
-        <spring.commons.version>1.12.0.BUILD-SNAPSHOT</spring.commons.version>
-        <spring.security.version>4.0.3.RELEASE</spring.security.version>
+        <spring.version>4.2.5.RELEASE</spring.version>
+        <spring.commons.version>1.12.1.RELEASE</spring.commons.version>
+        <spring.security.version>4.0.4.RELEASE</spring.security.version>
         <neo4j.version>2.3.2</neo4j.version>
-        <sdn.version>4.1.0.M1</sdn.version>
-        <neo4j.ogm.version>2.0.0-M02</neo4j.ogm.version>
+        <sdn.version>4.1.1.RELEASE</sdn.version>
+        <neo4j.ogm.version>2.0.1</neo4j.ogm.version>
     </properties>
 
     <dependencies>
@@ -127,6 +127,11 @@
             <artifactId>neo4j-ogm-test</artifactId>
             <version>${neo4j.ogm.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-core</artifactId>
+            <version>${neo4j.ogm.version}</version>
         </dependency>
 
         <dependency>
