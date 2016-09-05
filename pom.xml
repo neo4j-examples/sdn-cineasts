@@ -16,9 +16,20 @@
         <spring.commons.version>1.12.1.RELEASE</spring.commons.version>
         <spring.security.version>4.0.4.RELEASE</spring.security.version>
         <neo4j.version>2.3.2</neo4j.version>
-        <sdn.version>4.1.1.RELEASE</sdn.version>
-        <neo4j.ogm.version>2.0.1</neo4j.ogm.version>
+        <sdn.version>4.2.0.M1</sdn.version>
+        <neo4j.ogm.version>2.0.4</neo4j.ogm.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-releasetrain</artifactId>
+                <version>Ingalls-M1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Spring -->
@@ -63,7 +74,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
-            <version>${sdn.version}</version>
         </dependency>
 
         <dependency>
@@ -104,9 +114,23 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
-            <version>${sdn.version}</version>
+            <version>4.2.0.M1</version>
             <type>test-jar</type>
         </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-bolt-driver</artifactId>
+            <version>${neo4j.ogm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-embedded-driver</artifactId>
+            <version>${neo4j.ogm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.neo4j</groupId>
@@ -120,18 +144,6 @@
             <artifactId>neo4j-server</artifactId>
             <version>${neo4j.version}</version>
             <type>test-jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-test</artifactId>
-            <version>${neo4j.ogm.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-core</artifactId>
-            <version>${neo4j.ogm.version}</version>
         </dependency>
 
         <dependency>

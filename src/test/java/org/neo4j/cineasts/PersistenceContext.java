@@ -15,24 +15,29 @@ import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.neo4j.config.Neo4jConfiguration;
-import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
+import org.springframework.data.neo4j.repository.config.EnableExperimentalNeo4jRepositories;
+import org.springframework.data.neo4j.transaction.Neo4jTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableNeo4jRepositories("org.neo4j.cineasts.repository")
+@EnableExperimentalNeo4jRepositories("org.neo4j.cineasts.repository")
 @EnableTransactionManagement
 @ComponentScan("org.neo4j.cineasts")
-public class PersistenceContext extends Neo4jConfiguration {
+public class PersistenceContext{
 
-    @Override
-    public SessionFactory getSessionFactory() {
-        return new SessionFactory("org.neo4j.cineasts.domain");
+    SessionFactory sessionFactory = new SessionFactory("org.neo4j.cineasts.domain");
+    @Bean
+    public SessionFactory sessionFactory() {
+        return sessionFactory;
     }
 
-    @Override
     @Bean
-    public Session getSession() throws Exception {
-        return super.getSession();
+    public Neo4jTransactionManager transactionManager() {
+        return new Neo4jTransactionManager(sessionFactory());
+    }
+
+    @Bean
+    public Session session() {
+        return sessionFactory.openSession();
     }
 }
