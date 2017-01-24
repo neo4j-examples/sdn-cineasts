@@ -22,42 +22,40 @@ import org.neo4j.cineasts.repository.DirectorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.service.Neo4jDatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 @ContextConfiguration(classes = {PersistenceContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@RunWith(SpringRunner.class)
 public class DatabasePopulationTest {
 
-    @Autowired
-    ActorRepository actorRepository;
+	@Autowired
+	ActorRepository actorRepository;
 
-    @Autowired
-    DirectorRepository directorRepository;
+	@Autowired
+	DirectorRepository directorRepository;
 
-    @Autowired
-    MovieRepository movieRepository;
+	@Autowired
+	MovieRepository movieRepository;
 
-    @Autowired
-    Neo4jDatabaseCleaner cleaner;
+	@Autowired
+	Neo4jDatabaseCleaner cleaner;
 
-    @Test
-    public void databaseShouldBeCleared() {
+	@Test
+	@Transactional
+	public void databaseShouldBeCleared() {
 
-        Actor tomHanks = new Actor("1", "Tom Hanks");
-        actorRepository.save(tomHanks);
+		Actor tomHanks = new Actor("1", "Tom Hanks");
+		actorRepository.save(tomHanks);
 
-        Movie forrest = new Movie("1", "Forrest Gump");
-        forrest = movieRepository.save(forrest);
+		Movie forrest = new Movie("1", "Forrest Gump");
+		forrest = movieRepository.save(forrest);
 
-        Director robert = new Director("1", "Robert Zemeckis");
-        robert.directed(forrest);
-        directorRepository.save(robert);
+		Director robert = new Director("1", "Robert Zemeckis");
+		robert.directed(forrest);
+		directorRepository.save(robert);
 
-        cleaner.cleanDb();
-
-    }
-
+		cleaner.cleanDb();
+	}
 }

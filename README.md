@@ -2,9 +2,9 @@
 Cineasts.net
 ============
 
-This project is the demo/tutorial application for the [Spring Data Neo4j 4.1](http://docs.spring.io/spring-data/data-neo4j/docs/4.1.0.M1/reference/html/) library which provides convenient access to the [Neo4j](http://neo4j.org) graph database.
+This project is the demo/tutorial application for the [Spring Data Neo4j 4.2](http://docs.spring.io/spring-data/data-neo4j/docs/4.2.0.RC1/reference/html/) library which provides convenient access to the [Neo4j](http://neo4j.org) graph database.
 
-This tutorial creates a complete web application built on top of Spring Data Neo4j 4.1.
+This tutorial creates a complete web application built on top of Spring Data Neo4j 4.2.
 
 It uses a domain that should be familiar to most - movies. So for cineasts.net we decided to add a social
 touch to the whole movie rating business, allowing friends to share their ratings and get recommendations

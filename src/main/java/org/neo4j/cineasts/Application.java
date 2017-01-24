@@ -10,35 +10,44 @@
  */
 package org.neo4j.cineasts;
 
-import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
+import org.springframework.data.neo4j.transaction.Neo4jTransactionManager;
+import org.springframework.data.neo4j.web.support.OpenSessionInViewInterceptor;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @EnableNeo4jRepositories("org.neo4j.cineasts.repository")
 @EnableTransactionManagement
 @ComponentScan("org.neo4j.cineasts")
-public class Application extends Neo4jConfiguration {
+public class Application  extends WebMvcConfigurerAdapter {
 
-    public static final int NEO4J_PORT = 7474;
+	@Bean
+	public OpenSessionInViewInterceptor openSessionInViewInterceptor() {
+		OpenSessionInViewInterceptor openSessionInViewInterceptor =
+				new OpenSessionInViewInterceptor();
+		openSessionInViewInterceptor.setSessionFactory(sessionFactory());
+		return openSessionInViewInterceptor;
+	}
 
-    @Override
-    public SessionFactory getSessionFactory() {
-        return new SessionFactory("org.neo4j.cineasts.domain");
-    }
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addWebRequestInterceptor(openSessionInViewInterceptor());
+	}
 
+	@Bean
+	public SessionFactory sessionFactory() {
+		return new SessionFactory("org.neo4j.cineasts.domain");
+	}
 
-    @Override
-    @Bean
-    @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public Session getSession() throws Exception {
-        return super.getSession();
-    }
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new Neo4jTransactionManager(sessionFactory());
+	}
 }

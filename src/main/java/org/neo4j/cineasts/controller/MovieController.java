@@ -10,18 +10,14 @@
  */
 package org.neo4j.cineasts.controller;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
-import org.neo4j.cineasts.domain.Actor;
-import org.neo4j.cineasts.domain.Movie;
-import org.neo4j.cineasts.domain.Rating;
-import org.neo4j.cineasts.domain.User;
+import org.apache.commons.collections4.IteratorUtils;
+import org.neo4j.cineasts.domain.*;
 import org.neo4j.cineasts.repository.ActorRepository;
 import org.neo4j.cineasts.repository.MovieRepository;
 import org.neo4j.cineasts.repository.UserRepository;
 import org.neo4j.cineasts.service.DatabasePopulator;
-import org.neo4j.helpers.collection.IteratorUtil;
 import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.session.Session;
 import org.slf4j.Logger;
@@ -60,14 +56,16 @@ public class MovieController {
     public
     @ResponseBody
     Movie getMovie(@PathVariable String id) {
-        return IteratorUtil.firstOrNull(findMovieByProperty("id", id));
+        final Iterator<Movie> movieIterator = findMovieByProperty("id", id).iterator();
+        return movieIterator.hasNext() ? movieIterator.next() : null;
     }
 
 
     @RequestMapping(value = "/movies/{movieId}", method = RequestMethod.GET, headers = "Accept=text/html")
     public String singleMovieView(final Model model, @PathVariable String movieId) {
         User user = addUser(model);
-        Movie movie = IteratorUtil.firstOrNull(findMovieByProperty("id", movieId));
+        final Iterator<Movie> movieIterator = findMovieByProperty("id", movieId).iterator();
+        Movie movie = movieIterator.hasNext() ? movieIterator.next() : null;
         model.addAttribute("id", movieId);
         if (movie != null) {
             model.addAttribute("movie", movie);
@@ -95,7 +93,8 @@ public class MovieController {
 
     @RequestMapping(value = "/movies/{movieId}", method = RequestMethod.POST, headers = "Accept=text/html")
     public String updateMovie(Model model, @PathVariable String movieId, @RequestParam(value = "rated", required = false) Integer stars, @RequestParam(value = "comment", required = false) String comment) {
-        Movie movie = IteratorUtil.firstOrNull(findMovieByProperty("id", movieId));
+        final Iterator<Movie> movieIterator = findMovieByProperty("id", movieId).iterator();
+        Movie movie = movieIterator.hasNext() ? movieIterator.next() : null;
         User user = userRepository.getUserFromSession();
         if (user != null && movie != null) {
             int stars1 = stars == null ? -1 : stars;
@@ -116,8 +115,12 @@ public class MovieController {
     public String findMovies(Model model, @RequestParam("q") String query) {
         if (query != null && !query.isEmpty()) {
             //Page<Movie> movies = movieRepository.findByTitleLike(query, new PageRequest(0, 20));
-            Iterable<Movie> movies = movieRepository.findByTitleLike("(?i).*" + query + ".*");
-            model.addAttribute("movies", IteratorUtil.asCollection(movies));
+            final Set<Movie> movies = new HashSet<>();
+            for (Movie movie: movieRepository.findByTitleLike("(?i).*" + query + ".*")) {
+                movies.add(movie);
+            }
+
+            model.addAttribute("movies", movies);
         } else {
             model.addAttribute("movies", Collections.emptyList());
         }
@@ -128,10 +131,17 @@ public class MovieController {
 
     @RequestMapping(value = "/actors/{id}", method = RequestMethod.GET, headers = "Accept=text/html")
     public String singleActorView(Model model, @PathVariable String id) {
-        Actor actor = IteratorUtil.firstOrNull(findActorByProperty("id", id));
+        final Iterator<Actor> actorIterator = findActorByProperty("id", id).iterator();
+        Actor actor = actorIterator.hasNext() ? actorIterator.next() : null;
         model.addAttribute("actor", actor);
         model.addAttribute("id", id);
-        model.addAttribute("roles", IteratorUtil.asCollection(actor.getRoles()));
+
+        final Set<Role> roles = new HashSet<>();
+        for (Role role: actor.getRoles()) {
+            roles.add(role);
+        }
+
+        model.addAttribute("roles", roles);
         addUser(model);
         return "/actors/show";
     }

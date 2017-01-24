@@ -10,29 +10,36 @@
  */
 package org.neo4j.cineasts;
 
-import org.neo4j.ogm.session.Session;
+import org.neo4j.ogm.drivers.embedded.driver.EmbeddedDriver;
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
+import org.springframework.data.neo4j.transaction.Neo4jTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableNeo4jRepositories("org.neo4j.cineasts.repository")
 @EnableTransactionManagement
 @ComponentScan("org.neo4j.cineasts")
-public class PersistenceContext extends Neo4jConfiguration {
+public class PersistenceContext {
 
-    @Override
-    public SessionFactory getSessionFactory() {
-        return new SessionFactory("org.neo4j.cineasts.domain");
-    }
+	@Bean
+	public org.neo4j.ogm.config.Configuration configuration() {
+		final org.neo4j.ogm.config.Configuration configuration = new org.neo4j.ogm.config.Configuration();
+		configuration.driverConfiguration().setDriverClassName(EmbeddedDriver.class.getName());
+		return configuration;
+	}
 
-    @Override
-    @Bean
-    public Session getSession() throws Exception {
-        return super.getSession();
-    }
+	@Bean
+	public SessionFactory sessionFactory() {
+		return new SessionFactory(configuration(), "org.neo4j.cineasts.domain");
+	}
+
+	@Bean
+	public PlatformTransactionManager transactionManager() {
+		return new Neo4jTransactionManager(sessionFactory());
+	}
 }
