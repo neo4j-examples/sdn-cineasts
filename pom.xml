@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.neo4j.examples</groupId>
-    <artifactId>sdn4-cineasts</artifactId>
+    <artifactId>sdn-cineasts</artifactId>
     <version>2.0-SNAPSHOT</version>
 
     <name>Cineasts.net</name>
@@ -15,11 +15,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <spring.version>4.3.5.RELEASE</spring.version>
-        <spring.security.version>4.1.4.RELEASE</spring.security.version>
+        <spring.version>5.0.0.RELEASE</spring.version>
+        <spring.security.version>5.0.0.BUILD-SNAPSHOT</spring.security.version>
         <neo4j.version>3.1.1</neo4j.version>
-        <sdn.version>4.2.0.BUILD-SNAPSHOT</sdn.version>
-        <neo4j.ogm.version>2.1.1</neo4j.ogm.version>
+        <sdn.version>5.0.0.RELEASE</sdn.version>
+        <neo4j.ogm.version>3.0.0</neo4j.ogm.version>
     </properties>
 
     <dependencies>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-embedded-driver</artifactId>
-            <version>2.1.1</version>
+            <version>${neo4j.ogm.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -128,6 +128,21 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
 
     </dependencies>

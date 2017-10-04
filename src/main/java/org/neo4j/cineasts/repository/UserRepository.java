@@ -13,13 +13,13 @@ package org.neo4j.cineasts.repository;
 import org.neo4j.cineasts.domain.Rating;
 import org.neo4j.cineasts.domain.User;
 import org.springframework.data.neo4j.annotation.Query;
-import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 /**
  * @author mh
  * @since 02.04.11
  */
-public interface UserRepository extends GraphRepository<User>,
+public interface UserRepository extends Neo4jRepository<User, Long>,
         CineastsUserDetailsService {
 
     User findByLogin(String login);

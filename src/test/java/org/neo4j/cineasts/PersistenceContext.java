@@ -28,9 +28,8 @@ public class PersistenceContext {
 
 	@Bean
 	public org.neo4j.ogm.config.Configuration configuration() {
-		final org.neo4j.ogm.config.Configuration configuration = new org.neo4j.ogm.config.Configuration();
-		configuration.driverConfiguration().setDriverClassName(EmbeddedDriver.class.getName());
-		return configuration;
+		org.neo4j.ogm.config.Configuration.Builder builder = new org.neo4j.ogm.config.Configuration.Builder();
+		return builder.build();
 	}
 
 	@Bean

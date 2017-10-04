@@ -24,6 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
+
 /**
  * @author mh
  * @since 06.03.11
@@ -98,6 +100,6 @@ public class UserRepositoryImpl implements CineastsUserDetailsService {
 	}
 
 	public Iterable<User> findByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(User.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(User.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 }

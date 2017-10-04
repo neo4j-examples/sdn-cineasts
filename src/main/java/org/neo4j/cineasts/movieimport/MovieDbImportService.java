@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
+
 @Service
 public class MovieDbImportService {
 
@@ -162,6 +164,16 @@ public class MovieDbImportService {
 					throw e;
 				}
 			}
+			respectRateLimit();
+		}
+	}
+
+	// if we poll the api to fast we get a 429 error
+	private void respectRateLimit() {
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			// fail silently
 		}
 	}
 
@@ -229,6 +241,6 @@ public class MovieDbImportService {
 	}
 
 	public Iterable<Person> findPersonByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Person.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Person.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 }

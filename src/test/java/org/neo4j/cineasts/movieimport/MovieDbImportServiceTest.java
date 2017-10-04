@@ -2,6 +2,7 @@ package org.neo4j.cineasts.movieimport;
 
 import static java.util.Arrays.*;
 import static org.junit.Assert.*;
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author mh
@@ -25,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @ContextConfiguration(classes = {PersistenceContext.class})
 @RunWith(SpringRunner.class)
+@Transactional
 public class MovieDbImportServiceTest {
 
 	@Autowired
@@ -84,7 +87,7 @@ public class MovieDbImportServiceTest {
 	}
 
 	public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Movie.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Movie.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 
 	/*@Test

@@ -11,12 +11,12 @@
 package org.neo4j.cineasts.repository;
 
 import org.neo4j.cineasts.domain.Director;
-import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 /**
  * @author mh
  * @since 02.04.11
  */
-public interface DirectorRepository extends GraphRepository<Director> {
-    Director findById(String id);
+public interface DirectorRepository extends Neo4jRepository<Director, Long> {
+	Director findById(String id);
 }

@@ -11,14 +11,14 @@
 package org.neo4j.cineasts.repository;
 
 import org.neo4j.cineasts.domain.Actor;
-import org.springframework.data.neo4j.repository.GraphRepository;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 /**
  * @author mh
  * @since 02.04.11
  */
 
-public interface ActorRepository extends GraphRepository<Actor> {
+public interface ActorRepository extends Neo4jRepository<Actor, Long> {
 
-    Actor findById(String id);
+	Actor findById(String id);
 }

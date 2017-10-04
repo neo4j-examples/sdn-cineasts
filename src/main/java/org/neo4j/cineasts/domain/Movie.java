@@ -10,17 +10,16 @@
  */
 package org.neo4j.cineasts.domain;
 
-
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-
 
 /**
  * @author mh
@@ -28,236 +27,227 @@ import org.neo4j.ogm.annotation.Relationship;
  */
 @NodeEntity
 public class Movie {
-    @GraphId
-    Long nodeId;
 
-    String id;
-    String title;
-    String description;
+	@Id @GeneratedValue Long nodeId;
 
-    @Relationship(type = "DIRECTED", direction = Relationship.INCOMING)
-    Set<Director> directors = new HashSet<>();
+	String id;
+	String title;
+	String description;
 
-    @Relationship(type = "ACTS_IN", direction = Relationship.INCOMING)
-    Set<Role> roles = new HashSet<>();
+	@Relationship(type = "DIRECTED", direction = Relationship.INCOMING) Set<Director> directors = new HashSet<>();
 
-    @Relationship(type = "RATED", direction = Relationship.INCOMING)
-    private Set<Rating> ratings = new HashSet<>();
+	@Relationship(type = "ACTS_IN", direction = Relationship.INCOMING) Set<Role> roles = new HashSet<>();
 
-    private String language;
-    private String imdbId;
-    private String tagline;
-    private Date releaseDate;
-    private Integer runtime;
-    private String homepage;
-    private String trailer;
-    private String genre;
-    private String studio;
-    private String imageUrl;
+	@Relationship(type = "RATED", direction = Relationship.INCOMING) private Set<Rating> ratings = new HashSet<>();
 
-    public Movie() {
-    }
+	private String language;
+	private String imdbId;
+	private String tagline;
+	private Date releaseDate;
+	private Integer runtime;
+	private String homepage;
+	private String trailer;
+	private String genre;
+	private String studio;
+	private String imageUrl;
 
-    public Movie(String id, String title) {
-        this.id = id;
-        this.title = title;
-    }
+	public Movie() {}
 
-    @Relationship(type = "ACTS_IN", direction = Relationship.INCOMING)
-    public Collection<Role> getRoles() {
-        return roles;
-    }
+	public Movie(String id, String title) {
+		this.id = id;
+		this.title = title;
+	}
 
-    public int getYear() {
-        if (releaseDate == null) {
-            return 0;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(releaseDate);
-        return cal.get(Calendar.YEAR);
-    }
+	public Collection<Role> getRoles() {
+		return roles;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public int getYear() {
+		if (releaseDate == null) {
+			return 0;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(releaseDate);
+		return cal.get(Calendar.YEAR);
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public int getStars() {
-        Iterable<Rating> allRatings = ratings;
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-        if (allRatings == null) {
-            return 0;
-        }
-        int stars = 0, count = 0;
-        for (Rating rating : allRatings) {
-            stars += rating.getStars();
-            count++;
-        }
-        return count == 0 ? 0 : stars / count;
-    }
+	public int getStars() {
+		Iterable<Rating> allRatings = ratings;
 
-    @Relationship(type = "RATED", direction = Relationship.INCOMING)
-    public Set<Rating> getRatings() {
-        return ratings;
-    }
+		if (allRatings == null) {
+			return 0;
+		}
+		int stars = 0, count = 0;
+		for (Rating rating : allRatings) {
+			stars += rating.getStars();
+			count++;
+		}
+		return count == 0 ? 0 : stars / count;
+	}
 
-    @Relationship(type = "RATED", direction = Relationship.INCOMING)
-    public void setRatings(Set<Rating> ratings) {
-        this.ratings = ratings;
-    }
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
 
-    public void addRating(Rating rating) {
-        ratings.add(rating);
-    }
+	public void setRatings(Set<Rating> ratings) {
+		this.ratings = ratings;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	public void addRating(Rating rating) {
+		ratings.add(rating);
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public String getLanguage() {
+		return language;
+	}
 
-    public String getImdbId() {
-        return imdbId;
-    }
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 
-    public void setImdbId(String imdbId) {
-        this.imdbId = imdbId;
-    }
+	public String getImdbId() {
+		return imdbId;
+	}
 
-    public String getTagline() {
-        return tagline;
-    }
+	public void setImdbId(String imdbId) {
+		this.imdbId = imdbId;
+	}
 
-    public void setTagline(String tagline) {
-        this.tagline = tagline;
-    }
+	public String getTagline() {
+		return tagline;
+	}
 
-    public Date getReleaseDate() {
-        return releaseDate;
-    }
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
+	}
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+	public Date getReleaseDate() {
+		return releaseDate;
+	}
 
-    public Integer getRuntime() {
-        return runtime;
-    }
+	public void setReleaseDate(Date releaseDate) {
+		this.releaseDate = releaseDate;
+	}
 
-    public void setRuntime(Integer runtime) {
-        this.runtime = runtime;
-    }
+	public Integer getRuntime() {
+		return runtime;
+	}
 
-    public String getHomepage() {
-        return homepage;
-    }
+	public void setRuntime(Integer runtime) {
+		this.runtime = runtime;
+	}
 
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
+	public String getHomepage() {
+		return homepage;
+	}
 
-    public String getTrailer() {
-        return trailer;
-    }
+	public void setHomepage(String homepage) {
+		this.homepage = homepage;
+	}
 
-    public void setTrailer(String trailer) {
-        this.trailer = trailer;
-    }
+	public String getTrailer() {
+		return trailer;
+	}
 
-    public String getGenre() {
-        return genre;
-    }
+	public void setTrailer(String trailer) {
+		this.trailer = trailer;
+	}
 
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
+	public String getGenre() {
+		return genre;
+	}
 
-    public String getStudio() {
-        return studio;
-    }
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
 
-    public void setStudio(String studio) {
-        this.studio = studio;
-    }
+	public String getStudio() {
+		return studio;
+	}
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+	public void setStudio(String studio) {
+		this.studio = studio;
+	}
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+	public String getImageUrl() {
+		return imageUrl;
+	}
 
-    public String getYoutubeId() {
-        String trailerUrl = trailer;
-        if (trailerUrl == null || !trailerUrl.contains("youtu")) {
-            return null;
-        }
-        String[] parts = trailerUrl.split("[=/]");
-        int numberOfParts = parts.length;
-        return numberOfParts > 0 ? parts[numberOfParts - 1] : null;
-    }
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 
-    @Relationship(type = "DIRECTED", direction = Relationship.INCOMING)
-    public Set<Director> getDirectors() {
-        return directors;
-    }
+	public String getYoutubeId() {
+		String trailerUrl = trailer;
+		if (trailerUrl == null || !trailerUrl.contains("youtu")) {
+			return null;
+		}
+		String[] parts = trailerUrl.split("[=/]");
+		int numberOfParts = parts.length;
+		return numberOfParts > 0 ? parts[numberOfParts - 1] : null;
+	}
 
-    public void addDirector(Director director) {
-        directors.add(director);
-    }
+	public Set<Director> getDirectors() {
+		return directors;
+	}
 
-    public void addRole(Role role) {
-        roles.add(role);
-    }
+	public void addDirector(Director director) {
+		directors.add(director);
+	}
 
-    @Override
-    public String toString() {
-        return String.format("%s (%s) [%s]", title, releaseDate, id);
-    }
+	public void addRole(Role role) {
+		roles.add(role);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Movie)) {
-            return false;
-        }
+	@Override
+	public String toString() {
+		return String.format("%s (%s) [%s]", title, releaseDate, id);
+	}
 
-        Movie movie = (Movie) o;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Movie)) {
+			return false;
+		}
 
-        if (id != null ? !id.equals(movie.id) : movie.id != null) {
-            return false;
-        }
+		Movie movie = (Movie) o;
 
-        return true;
-    }
+		if (id != null ? !id.equals(movie.id) : movie.id != null) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
 }
-

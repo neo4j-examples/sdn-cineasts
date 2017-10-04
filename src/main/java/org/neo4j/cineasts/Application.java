@@ -10,6 +10,7 @@
  */
 package org.neo4j.cineasts;
 
+import org.neo4j.ogm.config.ClasspathConfigurationSource;
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,13 +21,13 @@ import org.springframework.data.neo4j.web.support.OpenSessionInViewInterceptor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableNeo4jRepositories("org.neo4j.cineasts.repository")
 @EnableTransactionManagement
 @ComponentScan("org.neo4j.cineasts")
-public class Application  extends WebMvcConfigurerAdapter {
+public class Application implements WebMvcConfigurer {
 
 	@Bean
 	public OpenSessionInViewInterceptor openSessionInViewInterceptor() {
@@ -43,7 +44,11 @@ public class Application  extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public SessionFactory sessionFactory() {
-		return new SessionFactory("org.neo4j.cineasts.domain");
+		ClasspathConfigurationSource configurationSource = new ClasspathConfigurationSource("/ogm.properties");
+		org.neo4j.ogm.config.Configuration.Builder builder = new org.neo4j.ogm.config.Configuration.Builder(configurationSource);
+		org.neo4j.ogm.config.Configuration configuration = builder.build();
+
+		return new SessionFactory(configuration,"org.neo4j.cineasts.domain");
 	}
 
 	@Bean

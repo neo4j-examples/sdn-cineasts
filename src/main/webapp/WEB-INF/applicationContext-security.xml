@@ -18,6 +18,7 @@
         <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')"/>
         <security:intercept-url pattern="/auth/login" access="isAnonymous()"/>
         <security:intercept-url pattern="/auth/register" access="isAnonymous()"/>
+        <security:intercept-url pattern="/populate" access="permitAll"/>
         <security:intercept-url pattern="/resources/**" access="permitAll"/>
         <security:intercept-url pattern="/images/**" access="permitAll"/>
         <security:intercept-url pattern="/**" access="isAnonymous() || hasRole('ROLE_USER')"/>

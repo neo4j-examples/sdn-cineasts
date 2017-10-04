@@ -10,11 +10,13 @@
  */
 package org.neo4j.cineasts.domain;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import org.neo4j.ogm.annotation.GraphId;
+import java.util.Date;
+
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 /**
  * @author mh
@@ -22,111 +24,107 @@ import java.util.Date;
  */
 @NodeEntity
 // Example nested annotations. Requires OGM 1.1.3 or later to be explicitly declared in the POM.
-@JsonSubTypes({
-                @JsonSubTypes.Type(value = Actor.class, name = "actor"),
-                @JsonSubTypes.Type(value = Director.class, name = "director")
-})
+@JsonSubTypes({ @JsonSubTypes.Type(value = Actor.class, name = "actor"),
+		@JsonSubTypes.Type(value = Director.class, name = "director") })
 public class Person {
 
-    @GraphId
-    Long nodeId;
-    String id;
-    String name;
-    private Date birthday;
-    private String birthplace;
-    private String biography;
-    private Integer version;
-    private String profileImageUrl;
+	@Id @GeneratedValue Long nodeId;
+	String id;
+	String name;
+	private Date birthday;
+	private String birthplace;
+	private String biography;
+	private Integer version;
+	private String profileImageUrl;
 
-    public Person(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+	public Person(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
 
-    public Person() {
-    }
+	public Person() {}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String toString() {
-        return String.format("%s [%s]", name, id);
-    }
+	@Override
+	public String toString() {
+		return String.format("%s [%s]", name, id);
+	}
 
-    public Date getBirthday() {
-        return birthday;
-    }
+	public Date getBirthday() {
+		return birthday;
+	}
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
 
-    public String getBirthplace() {
-        return birthplace;
-    }
+	public String getBirthplace() {
+		return birthplace;
+	}
 
-    public void setBirthplace(String birthplace) {
-        this.birthplace = birthplace;
-    }
+	public void setBirthplace(String birthplace) {
+		this.birthplace = birthplace;
+	}
 
-    public String getBiography() {
-        return biography;
-    }
+	public String getBiography() {
+		return biography;
+	}
 
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
+	public void setBiography(String biography) {
+		this.biography = biography;
+	}
 
-    public Integer getVersion() {
-        return version;
-    }
+	public Integer getVersion() {
+		return version;
+	}
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
+	public String getProfileImageUrl() {
+		return profileImageUrl;
+	}
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Person)) {
-            return false;
-        }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Person)) {
+			return false;
+		}
 
-        Person person = (Person) o;
+		Person person = (Person) o;
 
-        if (id != null ? !id.equals(person.id) : person.id != null) {
-            return false;
-        }
+		if (id != null ? !id.equals(person.id) : person.id != null) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
 }

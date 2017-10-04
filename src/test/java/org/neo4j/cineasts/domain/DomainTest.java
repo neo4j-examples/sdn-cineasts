@@ -11,6 +11,7 @@
 package org.neo4j.cineasts.domain;
 
 import static org.junit.Assert.*;
+import static org.neo4j.ogm.cypher.ComparisonOperator.EQUALS;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -345,6 +346,7 @@ public class DomainTest {
 		Iterable<Movie> mat = movieRepository.findByTitleLike("(?i).*mat.*");
 		List<String> movieIds = new ArrayList<>();
 		for (Movie movie : mat) {
+			System.out.println(movie);
 			movieIds.add(movie.getId());
 		}
 		assertEquals(2, movieIds.size());
@@ -366,22 +368,22 @@ public class DomainTest {
 	}
 
 	public Iterable<Actor> findActorByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Actor.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Actor.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 
 	public Iterable<Director> findDirectorByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Director.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Director.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 
 	public Iterable<Movie> findMovieByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Movie.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Movie.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 
 	public Iterable<Person> findPersonByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(Person.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(Person.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 
 	public Iterable<User> findUserByProperty(String propertyName, Object propertyValue) {
-		return session.loadAll(User.class, new Filter(propertyName, propertyValue));
+		return session.loadAll(User.class, new Filter(propertyName, EQUALS, propertyValue));
 	}
 }

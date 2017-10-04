@@ -11,12 +11,12 @@
 
 package org.neo4j.cineasts.domain;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
 import org.neo4j.cineasts.converter.UserRolesConverter;
-import org.neo4j.ogm.annotation.GraphId;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
@@ -25,145 +25,140 @@ import org.springframework.security.core.GrantedAuthority;
 
 @NodeEntity
 public class User {
-    public static final String FRIEND = "FRIEND";
-    public static final String RATED = "RATED";
-    private static final String SALT = "cewuiqwzie";
-    @GraphId
-    Long nodeId;
-    String login;
-    String name;
-    String password;
-    String info;
+	public static final String FRIEND = "FRIEND";
+	public static final String RATED = "RATED";
+	private static final String SALT = "cewuiqwzie";
 
-    @Relationship(type = FRIEND, direction = Relationship.UNDIRECTED)
-    Set<User> friends = new HashSet<>();
+	@Id @GeneratedValue Long nodeId;
+	String login;
+	String name;
+	String password;
+	String info;
 
-    @Convert(UserRolesConverter.class)
-    private SecurityRole[] roles;
+	@Relationship(type = FRIEND, direction = Relationship.UNDIRECTED) Set<User> friends = new HashSet<>();
 
-    @Relationship(type = "RATED")
-    private Set<Rating> ratings = new HashSet<>();
+	@Convert(UserRolesConverter.class) private SecurityRole[] roles;
 
-    public User() {
-    }
+	@Relationship(type = "RATED") private Set<Rating> ratings = new HashSet<>();
 
-    public User(String login, String name, String password) {
-        this.login = login;
-        this.name = name;
-        this.password = password;
-    }
+	public User() {}
 
-    public User(String login, String name, String password, SecurityRole... roles) {
-        this.login = login;
-        this.name = name;
-        this.password = encode(password);
-        this.roles = roles;
-    }
+	public User(String login, String name, String password) {
+		this.login = login;
+		this.name = name;
+		this.password = password;
+	}
 
-    private String encode(String password) {
-        return new Md5PasswordEncoder().encodePassword(password, SALT);
-    }
+	public User(String login, String name, String password, SecurityRole... roles) {
+		this.login = login;
+		this.name = name;
+		this.password = encode(password);
+		this.roles = roles;
+	}
 
+	private String encode(String password) {
+		return new Md5PasswordEncoder().encodePassword(password, SALT);
+	}
 
-    public void addFriend(User friend) {
-        this.friends.add(friend);
-    }
+	public void addFriend(User friend) {
+		this.friends.add(friend);
+	}
 
-    public Rating rate(Movie movie, int stars, String comment) {
-        if (ratings == null) {
-            ratings = new HashSet<>();
-        }
+	public Rating rate(Movie movie, int stars, String comment) {
+		if (ratings == null) {
+			ratings = new HashSet<>();
+		}
 
-        Rating rating = new Rating(this, movie, stars, comment);
-        ratings.add(rating);
-        movie.addRating(rating);
-        return rating;
-    }
+		Rating rating = new Rating(this, movie, stars, comment);
+		ratings.add(rating);
+		movie.addRating(rating);
+		return rating;
+	}
 
-    public Set<Rating> getRatings() {
-        return ratings;
-    }
+	public Set<Rating> getRatings() {
+		return ratings;
+	}
 
-    @Override
-    public String toString() {
-        return String.format("%s (%s)", name, login);
-    }
+	@Override
+	public String toString() {
+		return String.format("%s (%s)", name, login);
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Set<User> getFriends() {
-        return friends;
-    }
+	public Set<User> getFriends() {
+		return friends;
+	}
 
-    public SecurityRole[] getRole() {
-        return roles;
-    }
+	public SecurityRole[] getRole() {
+		return roles;
+	}
 
-    public String getLogin() {
-        return login;
-    }
+	public String getLogin() {
+		return login;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getInfo() {
-        return info;
-    }
+	public String getInfo() {
+		return info;
+	}
 
-    public void setInfo(String info) {
-        this.info = info;
-    }
+	public void setInfo(String info) {
+		this.info = info;
+	}
 
-    public void updatePassword(String old, String newPass1, String newPass2) {
-        if (!password.equals(encode(old))) {
-            throw new IllegalArgumentException("Existing Password invalid");
-        }
-        if (!newPass1.equals(newPass2)) {
-            throw new IllegalArgumentException("New Passwords don't match");
-        }
-        this.password = encode(newPass1);
-    }
+	public void updatePassword(String old, String newPass1, String newPass2) {
+		if (!password.equals(encode(old))) {
+			throw new IllegalArgumentException("Existing Password invalid");
+		}
+		if (!newPass1.equals(newPass2)) {
+			throw new IllegalArgumentException("New Passwords don't match");
+		}
+		this.password = encode(newPass1);
+	}
 
-    public boolean isFriend(User other) {
-        return other != null && getFriends().contains(other);
-    }
+	public boolean isFriend(User other) {
+		return other != null && getFriends().contains(other);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof User)) {
-            return false;
-        }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof User)) {
+			return false;
+		}
 
-        User user = (User) o;
+		User user = (User) o;
 
-        if (login != null ? !login.equals(user.login) : user.login != null) {
-            return false;
-        }
+		if (login != null ? !login.equals(user.login) : user.login != null) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        return login != null ? login.hashCode() : 0;
-    }
+	@Override
+	public int hashCode() {
+		return login != null ? login.hashCode() : 0;
+	}
 
-    public enum SecurityRole implements GrantedAuthority {
-        ROLE_USER, ROLE_ADMIN;
+	public enum SecurityRole implements GrantedAuthority {
+		ROLE_USER, ROLE_ADMIN;
 
-        @Override
-        public String getAuthority() {
-            return name();
-        }
-    }
+		@Override
+		public String getAuthority() {
+			return name();
+		}
+	}
 }
