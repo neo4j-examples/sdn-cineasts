@@ -14,13 +14,13 @@ package org.neo4j.cineasts.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.neo4j.cineasts.converter.UserRolesConverter;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 import org.neo4j.ogm.annotation.typeconversion.Convert;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 
 @NodeEntity
@@ -57,7 +57,7 @@ public class User {
 	}
 
 	private String encode(String password) {
-		return new Md5PasswordEncoder().encodePassword(password, SALT);
+		return DigestUtils.md5Hex(password);
 	}
 
 	public void addFriend(User friend) {
